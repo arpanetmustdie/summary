@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Order Summary Mock</title>
+    <!-- NECESARIO PARA MÓVIL -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --thumb-bg: #ffffff;
+        --thumb-border: #dddddd;
+
+        --text-title: #4c4c4c; /* product name */
+        --text-price-title: #4f4f4f; /* price arriba derecha */
+
+        --text-label: #7d7d7d; /* Subtotal / Shipping / Duties / Taxes */
+        --text-value: #5b5b5b; /* valores de la derecha */
+
+        --divider: #f0f0f0;
+        --total-price: #555555; /* $ total */
+      }
+
+      @font-face {
+        font-family: erd-fontA;
+        src: url(./fonts/HelveticaNeueLTStd-BdCn.woff2);
+      }
+
+      @font-face {
+        font-family: erd-fontB;
+        src: url(./fonts/HelveticaNeueLTStd-Roman.woff2);
+      }
+
+      @font-face {
+        font-family: erd-fontC;
+        src: url(./fonts/HelveticaNeueLTStd\ BdCn.otf);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: #ffffff;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Helvetica Neue", Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding: 28px 16px;
+      }
+
+      .order-wrapper {
+        width: 100%;
+        max-width: 420px;
+      }
+
+      /* --------- BLOQUE SUPERIOR (LOGO + THANK YOU) ---------- */
+
+      .shop-header-logo {
+        margin-bottom: 24px;
+      }
+
+      .shop-header-logo img {
+        max-width: 320px;
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      .thank-title {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        font-size: 20px;
+        font-weight: 400;
+        margin-bottom: 10px;
+        color: #000000;
+      }
+
+      .thank-text {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+        font-size: 14px;
+        line-height: 1.45;
+        color: #606060;
+        margin-bottom: 22px;
+      }
+
+      .thank-text span {
+        display: block;
+      }
+
+      /* fila botón + “or Visit our store” */
+      .action-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px; /* espacio antes de “Order summary” */
+      }
+
+      .view-order-btn {
+        display: inline-block;
+        background: #000000;
+        color: #ffffff;
+        padding: 19px 17px;
+        font-size: 14px;
+        font-weight: 400;
+        text-decoration: none;
+        border-radius: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+
+      .visit-store-text {
+        margin-left: 8px;
+        font-size: 13px;
+        color: #000000;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+
+      .visit-store-text a {
+        color: #000000;
+        text-decoration: none;
+      }
+
+      /* --------- ORDER SUMMARY ---------- */
+
+      .order-title {
+        font-size: 17px;
+        font-weight: 500;
+        margin-bottom: 34px; /* ajustado al screenshot */
+        color: #313131;
+      }
+
+      .product-row {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 16px;
+      }
+
+      .thumb-box {
+        width: 72px;
+        height: 72px;
+        background: var(--thumb-bg); /* #ffffff */
+        border: 1.5px solid var(--thumb-border); /* #e8e8e8 */
+        border-radius: 12px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+
+      .thumb-box img {
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+      }
+
+      .product-info {
+        flex: 1;
+        padding-left: 12px;
+        min-width: 0;
+      }
+
+      .product-name {
+        font-family: erd-fontC;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        word-break: break-word;
+        color: var(--text-title);
+        margin-bottom: 3px;
+      }
+
+      .product-variant {
+        font-size: 12px;
+        color: var(--text-label);
+        text-transform: uppercase;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+
+      .product-price {
+        font-size: 15px;
+        font-weight: 700;
+        white-space: nowrap;
+        color: var(--text-price-title);
+        margin-left: 10px;
+        font-variant-numeric: tabular-nums;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+
+      .divider {
+        height: 2px;
+        background: var(--divider);
+        margin: 14px 0 18px;
+        width: 100%;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+          "Segoe UI Symbol";
+      }
+
+      .label {
+        font-size: 14px;
+        color: var(--text-label);
+        font-weight: 400;
+      }
+
+      .value {
+        font-size: 14px;
+        color: var(--text-value);
+        font-variant-numeric: tabular-nums;
+        font-weight: 700; /* bold */
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 12px;
+        border-top: 2px solid var(--divider);
+      }
+
+      .total-label {
+        font-size: 16px;
+        font-weight: 400;
+        color: #777777;
+      }
+
+      .total-value {
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--total-price);
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* --------- RESPONSIVE (solo ajustes de margen/ancho) ---------- */
+      @media (max-width: 768px) {
+        body {
+          padding: 20px 10px; /* menos margen lateral en móvil */
+        }
+
+        .order-wrapper {
+          max-width: 100%; /* ocupa todo el ancho disponible */
+        }
+
+        .action-row {
+          flex-wrap: wrap; /* si no cabe, el texto baja a la línea siguiente */
+          row-gap: 6px;
+        }
+
+        .visit-store-text {
+          margin-left: 8px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="order-wrapper">
+      <!-- BLOQUE SUPERIOR -->
+      <div class="shop-header-logo">
+        <img
+          src="https://cdn.shopify.com/s/files/1/0729/7482/7794/files/logo_x320.svg?v=1687776732"
+          alt="Enfants Riches Déprimés"
+        />
+      </div>
+
+      <h1 class="thank-title">Thank you for your purchase!</h1>
+
+      <p class="thank-text">
+        <span
+          >We're getting your order ready to be shipped. We will notify you when
+          it has been sent.</span
+        >
+      </p>
+
+      <div class="action-row">
+        <a href="#" class="view-order-btn">View your order</a>
+        <span class="visit-store-text">
+          or <a href="#">Visit our store</a>
+        </span>
+      </div>
+
+      <!-- ORDER SUMMARY -->
+      <div class="order-title">Order summary</div>
+
+      <div class="product-row">
+        <div class="thumb-box">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0729/7482/7794/files/070-356-A_128x.png"
+            alt="Product"
+          />
+        </div>
+
+        <div class="product-info">
+          <div class="product-name">
+            REALMS OF THE UNREAL SKINNY PUDDLE PANT × 1
+          </div>
+          <div class="product-variant">MULTI / 46</div>
+        </div>
+
+        <div class="product-price">$5,350.00</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="label">Subtotal</div>
+        <div class="value">$5,350.00</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Shipping</div>
+        <div class="value">$174.94</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Duties</div>
+        <div class="value">$267.50</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Taxes</div>
+        <div class="value">$561.75</div>
+      </div>
+
+      <div class="total-row">
+        <div class="total-label">Total</div>
+        <div class="total-value">$6,354.19 USD</div>
+      </div>
+    </div>
+  </body>
+</html>
